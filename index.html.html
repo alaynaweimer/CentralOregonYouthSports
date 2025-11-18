@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Central Oregon Youth Sports Finder & Planner</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1em;
+            transition: all 0.3s;
+            border: none;
+            background: transparent;
+        }
+
+        .nav-tab:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .nav-tab.active {
+            background: white;
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 40px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .input-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .input-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .kids-input {
+            margin-bottom: 20px;
+        }
+
+        .kid-entry {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .kid-entry input, .kid-entry select {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .kid-entry input:focus, .kid-entry select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .kid-entry input[type="number"], .kid-entry input[type="text"] {
+            width: 150px;
+        }
+
+        .kid-entry select {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+            padding: 8px 15px;
+            font-size: 0.9em;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .btn-add {
+            background: #10b981;
+            color: white;
+            margin-top: 10px;
+        }
+
+        .btn-add:hover {
+            background: #059669;
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .filter-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .results-section {
+            margin-top: 30px;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .results-header h2 {
+            color: #333;
+            font-size: 1.8em;
+        }
+
+        .results-count {
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .activity-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .activity-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .activity-title {
+            font-size: 1.5em;
+            color: #333;
+            font-weight: 700;
+        }
+
+        .activity-organization {
+            color: #667eea;
+            font-size: 1.1em;
+            margin-top: 5px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .badge-season {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-type {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-age {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-urgent {
+            background: #fee2e2;
+            color: #991b1b;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .activity-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #666;
+        }
+
+        .detail-value {
+            color: #333;
+        }
+
+        .activity-link {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .activity-link:hover {
+            background: #5568d3;
+            transform: translateX(5px);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .no-results h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        /* Year Planner Styles */
+        .calendar-view {
+            margin-top: 30px;
+        }
+
+        .season-section {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .season-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .season-icon {
+            font-size: 2em;
+        }
+
+        .season-title {
+            font-size: 1.8em;
+            color: #333;
+            font-weight: 700;
+        }
+
+        .season-dates {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .season-activities {
+            display: grid;
+            gap: 15px;
+        }
+
+        .mini-activity-card {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .mini-activity-card:hover {
+            background: #eef2ff;
+            transform: translateX(5px);
+        }
+
+        .mini-activity-title {
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .mini-activity-org {
+            color: #667eea;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+        }
+
+        .mini-activity-kids {
+            background: white;
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            color: #666;
+            margin-right: 8px;
+        }
+
+        .export-section {
+            background: #f0f4ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .print-btn {
+            background: #10b981;
+            color: white;
+        }
+
+        .print-btn:hover {
+            background: #059669;
+        }
+
+        .admin-section {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .admin-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .admin-info {
+            background: #f0f4ff;
+            padding: 20px;
+            border-radius: 10px;
+            line-height: 1.8;
+        }
+
+        .admin-info code {
+            background: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #667eea;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .kid-entry {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .kid-entry input[type="number"],
+            .kid-entry input[type="text"],
+            .kid-entry select {
+                width: 100%;
+            }
+
+            .nav-tab {
+                font-size: 0.9em;
+                padding: 15px 10px;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .nav-tabs, .input-section, .filters, .export-section, .admin-section, .btn {
+                display: none !important;
+            }
+            .container {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏃‍♂️ Central Oregon Youth Sports Finder</h1>
+            <p>Find activities & plan your family's year!</p>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="switchTab('finder')">
+                🔍 Find Activities
+            </button>
+            <button class="nav-tab" onclick="switchTab('planner')">
+                📅 Year Planner
+            </button>
+        </div>
+
+        <!-- FINDER TAB -->
+        <div id="finderTab" class="tab-content active">
+            <div class="input-section">
+                <h2>Tell Us About Your Kids</h2>
+                <div id="kidsInputContainer">
+                    <div class="kid-entry">
+                        <input type="text" placeholder="Child's Name" class="kid-name">
+                        <input type="number" placeholder="Age" min="3" max="18" class="kid-age">
+                        <select class="kid-interests">
+                            <option value="">Any Sport Type (Optional)</option>
+                            <option value="Team Sport">Team Sport</option>
+                            <option value="Individual Sport">Individual Sport</option>
+                            <option value="Recreational">Recreational</option>
+                            <option value="Competitive">Competitive</option>
+                        </select>
+                        <button class="btn btn-secondary remove-kid" style="display: none;">Remove</button>
+                    </div>
+                </div>
+                <button class="btn btn-add" onclick="addKidEntry()">+ Add Another Child</button>
+                <br><br>
+                <button class="btn btn-primary" onclick="findActivities()">🔍 Find Activities For My Kids</button>
+            </div>
+
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Activity Type</label>
+                    <select id="activityTypeFilter" onchange="applyFilters()">
+                        <option value="">All Activities</option>
+                        <option value="Sports & Athletics">Sports & Athletics</option>
+                        <option value="Arts & Music">Arts & Music</option>
+                        <option value="STEM & Academics">STEM & Academics</option>
+                        <option value="Dance & Theater">Dance & Theater</option>
+                        <option value="Camps & Clinics">Camps & Clinics</option>
+                        <option value="Clubs & Recreation">Clubs & Recreation</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Offered By</label>
+                    <select id="providerFilter" onchange="applyFilters()">
+                        <option value="">All Providers</option>
+                        <option value="Community Organization">Community Organization</option>
+                        <option value="School (Elementary)">Schools (Elementary)</option>
+                        <option value="School (Middle School)">Schools (Middle School)</option>
+                        <option value="School District">School District Programs</option>
+                        <option value="Parks & Recreation">Parks & Recreation</option>
+                        <option value="Private Provider">Private Providers</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Season</label>
+                    <select id="seasonFilter" onchange="applyFilters()">
+                        <option value="">All Seasons</option>
+                        <option value="Fall">Fall</option>
+                        <option value="Winter">Winter</option>
+                        <option value="Spring">Spring</option>
+                        <option value="Summer">Summer</option>
+                        <option value="Year-Round">Year-Round</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Location</label>
+                    <select id="locationFilter" onchange="applyFilters()">
+                        <option value="">All Locations</option>
+                        <option value="Bend">Bend</option>
+                        <option value="Redmond">Redmond</option>
+                        <option value="Sisters">Sisters</option>
+                        <option value="Prineville">Prineville</option>
+                        <option value="La Pine">La Pine</option>
+                        <option value="Madras">Madras</option>
+                        <option value="Sunriver">Sunriver</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="results-section" id="resultsSection" style="display: none;">
+                <div class="results-header">
+                    <h2>Available Activities</h2>
+                    <span class="results-count" id="resultsCount">0 activities found</span>
+                </div>
+                <div id="resultsContainer"></div>
+            </div>
+
+            <div class="admin-section">
+                <h3>📋 For Program Administrators</h3>
+                <div class="admin-info">
+                    <p><strong>Want to add your program to this directory?</strong></p>
+                    <p>Contact: Alayna at IEF Fractional Services for details on how to submit your program information.</p>
+                    <p style="margin-top: 15px;"><em>This is a free community resource for Central Oregon families.</em></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PLANNER TAB -->
+        <div id="plannerTab" class="tab-content">
+            <div class="input-section">
+                <h2>📅 Your Family's Year-Round Sports Plan</h2>
+                <p style="margin-bottom: 20px;">See all activities your kids can participate in throughout the year, organized by season.</p>
+                <button class="btn btn-primary" onclick="generateYearPlan()">Generate My Family's Plan</button>
+            </div>
+
+            <div id="plannerResults" style="display: none;">
+                <div class="export-section">
+                    <h3>📥 Export Your Plan</h3>
+                    <p>Save or share your family's activity calendar</p>
+                    <div class="export-buttons">
+                        <button class="btn print-btn" onclick="window.print()">🖨️ Print Calendar</button>
+                        <button class="btn btn-primary" onclick="exportToCalendar()">📅 Download Calendar File</button>
+                    </div>
+                </div>
+
+                <div class="calendar-view" id="calendarView"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ====== GOOGLE SHEETS CONFIGURATION ======
+        const SHEET_ID = 'YOUR-SHEET-ID-HERE';
+        const SHEET_NAME = 'Sheet1';
+        
+        // ====== DATA STORAGE ======
+        let allActivities = [
+            {
+                name: "Youth Soccer League",
+                organization: "Bend Parks & Recreation",
+                category: "Parks & Recreation",
+                season: "Fall",
+                activityType: "Sports & Athletics",
+                type: "Team Sport",
+                ageMin: 5,
+                ageMax: 12,
+                location: "Bend",
+                registrationDeadline: "2025-11-25",
+                website: "https://www.bendparksandrec.org",
+                description: "Recreational soccer league focusing on skill development and fun"
+            },
+            {
+                name: "Running Club",
+                organization: "Tom McCall Elementary",
+                category: "School (Elementary)",
+                season: "Fall",
+                activityType: "Sports & Athletics",
+                type: "Recreational",
+                ageMin: 6,
+                ageMax: 11,
+                location: "Redmond",
+                registrationDeadline: "",
+                website: "https://www.redmondschools.org",
+                description: "After-school running club for all fitness levels. Meets Tuesdays and Thursdays 3:30-4:30pm."
+            },
+            {
+                name: "Art Club",
+                organization: "Elton Gregory Middle School",
+                category: "School (Middle School)",
+                season: "Year-Round",
+                activityType: "Arts & Music",
+                type: "Recreational",
+                ageMin: 11,
+                ageMax: 14,
+                location: "Redmond",
+                registrationDeadline: "",
+                website: "https://www.redmondschools.org",
+                description: "Creative art projects and exploration. Wednesdays after school."
+            },
+            {
+                name: "Swimming Lessons",
+                organization: "Juniper Swim & Fitness Center",
+                category: "Community Organization",
+                season: "Year-Round",
+                activityType: "Sports & Athletics",
+                type: "Individual Sport",
+                ageMin: 3,
+                ageMax: 18,
+                location: "Bend",
+                registrationDeadline: "2025-12-01",
+                website: "https://www.juniperswimfitness.com",
+                description: "Learn to swim program with multiple skill levels"
+            },
+            {
+                name: "Youth Basketball",
+                organization: "Redmond Area Park & Recreation District",
+                category: "Parks & Recreation",
+                season: "Winter",
+                activityType: "Sports & Athletics",
+                type: "Team Sport",
+                ageMin: 7,
+                ageMax: 14,
+                location: "Redmond",
+                registrationDeadline: "2025-11-30",
+                website: "https://www.raprd.org",
+                description: "House basketball league for all skill levels"
+            },
+            {
+                name: "7th/8th Grade Basketball",
+                organization: "Elton Gregory Middle School",
+                category: "School (Middle School)",
+                season: "Winter",
+                activityType: "Sports & Athletics",
+                type: "Team Sport",
+                ageMin: 12,
+                ageMax: 14,
+                location: "Redmond",
+                registrationDeadline: "",
+                website: "https://www.redmondschools.org",
+                description: "Interscholastic middle school basketball. Practice 3-4x/week, games against other Central Oregon middle schools."
+            },
+            {
+                name: "Rock Climbing Classes",
+                organization: "The Pavilion",
+                category: "Private Provider",
+                season: "Year-Round",
+                activityType: "Sports & Athletics",
+                type: "Individual Sport",
+                ageMin: 6,
+                ageMax: 17,
+                location: "Bend",
+                registrationDeadline: "",
+                website: "https://www.pavilionbend.com",
+                description: "Indoor rock climbing instruction and open gym"
+            },
+            {
+                name: "Youth Skiing/Snowboarding",
+                organization: "Mt. Bachelor Sports Education Foundation",
+                category: "Community Organization",
+                season: "Winter",
+                activityType: "Sports & Athletics",
+                type: "Individual Sport",
+                ageMin: 4,
+                ageMax: 18,
+                location: "Bend",
+                registrationDeadline: "2025-12-15",
+                website: "https://www.mbsef.org",
+                description: "Alpine and Nordic skiing programs"
+            },
+            {
+                name: "Robotics Club",
+                organization: "Tom McCall Elementary",
+                category: "School (Elementary)",
+                season: "Winter",
+                activityType: "STEM & Academics",
+                type: "Clubs & Recreation",
+                ageMin: 8,
+                ageMax: 11,
+                location: "Redmond",
+                registrationDeadline: "",
+                website: "https://www.redmondschools.org",
+                description: "Build and program robots. Learn engineering and problem-solving. Thursdays 3:30-4:45pm."
+            },
+            {
+                name: "Little League Baseball",
+                organization: "Bend Little League",
+                category: "Community Organization",
+                season: "Spring",
+                activityType: "Sports & Athletics",
+                type: "Team Sport",
+                ageMin: 4,
+                ageMax: 12,
+                location: "Bend",
+                registrationDeadline: "",
+                website: "https://www.bendlittleleague.org",
+                description: "T-ball through majors divisions"
+            },
+            {
+                name: "Drama Club",
+                organization: "Bend-La Pine Schools Community Ed",
+                category: "School District",
+                season: "Spring",
+                activityType: "Dance & Theater",
+                type: "Recreational",
+                ageMin: 8,
+                ageMax: 14,
+                location: "Bend",
+                registrationDeadline: "",
+                website: "https://www.bendlapineschools.org",
+                description: "Spring production with performances. Learn acting, stagecraft, and teamwork."
+            },
+            {
+                name: "Summer Soccer Camp",
+                organization: "N Zone Sports",
+                category: "Community Organization",
+                season: "Summer",
+                activityType: "Camps & Clinics",
+                type: "Team Sport",
+                ageMin: 6,
+                ageMax: 14,
+                location: "Bend",
+                registrationDeadline: "",
+                website: "https://nzonesports.com",
+                description: "Week-long soccer skills camp"
+            },
+            {
+                name: "Summer STEM Camp",
+                organization: "Redmond School District",
+                category: "School District",
+                season: "Summer",
+                activityType: "STEM & Academics",
+                type: "Camps & Clinics",
+                ageMin: 7,
+                ageMax: 12,
+                location: "Redmond",
+                registrationDeadline: "",
+                website: "https://www.redmondschools.org",
+                description: "Week-long STEM camps. Robotics, coding, science experiments, and hands-on learning."
+            }
+        ];
+
+        let filteredActivities = [...allActivities];
+        let kidsList = [];
+
+        // ====== SEASON DEFINITIONS ======
+        const seasons = {
+            'Fall': { icon: '🍂', months: 'September - November', color: '#f59e0b' },
+            'Winter': { icon: '❄️', months: 'December - February', color: '#3b82f6' },
+            'Spring': { icon: '🌸', months: 'March - May', color: '#ec4899' },
+            'Summer': { icon: '☀️', months: 'June - August', color: '#10b981' },
+            'Year-Round': { icon: '🔄', months: 'All Year', color: '#8b5cf6' }
+        };
+
+        // ====== TAB SWITCHING ======
+        function switchTab(tabName) {
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            if (tabName === 'finder') {
+                document.getElementById('finderTab').classList.add('active');
+                event.target.classList.add('active');
+            } else if (tabName === 'planner') {
+                document.getElementById('plannerTab').classList.add('active');
+                event.target.parentElement.children[1].classList.add('active');
+            }
+        }
+
+        // ====== KID ENTRY MANAGEMENT ======
+        function addKidEntry() {
+            const container = document.getElementById('kidsInputContainer');
+            const newEntry = document.createElement('div');
+            newEntry.className = 'kid-entry';
+            newEntry.innerHTML = `
+                <input type="text" placeholder="Child's Name" class="kid-name">
+                <input type="number" placeholder="Age" min="3" max="18" class="kid-age">
+                <select class="kid-interests">
+                    <option value="">Any Sport Type (Optional)</option>
+                    <option value="Team Sport">Team Sport</option>
+                    <option value="Individual Sport">Individual Sport</option>
+                    <option value="Recreational">Recreational</option>
+                    <option value="Competitive">Competitive</option>
+                </select>
+                <button class="btn btn-secondary remove-kid" onclick="removeKidEntry(this)">Remove</button>
+            `;
+            container.appendChild(newEntry);
+        }
+
+        function removeKidEntry(button) {
+            button.parentElement.remove();
+        }
+
+        function collectKidsInfo() {
+            kidsList = [];
+            const kidEntries = document.querySelectorAll('.kid-entry');
+            
+            kidEntries.forEach(entry => {
+                const name = entry.querySelector('.kid-name').value || 'Child';
+                const age = parseInt(entry.querySelector('.kid-age').value);
+                const interest = entry.querySelector('.kid-interests').value;
+                
+                if (age) {
+                    kidsList.push({ name, age, interest });
+                }
+            });
+
+            return kidsList.length > 0;
+        }
+
+        // ====== FIND ACTIVITIES ======
+        function findActivities() {
+            if (!collectKidsInfo()) {
+                alert('Please enter at least one child\'s age!');
+                return;
+            }
+
+            applyFilters();
+            document.getElementById('resultsSection').style.display = 'block';
+            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function applyFilters() {
+            const activityTypeFilter = document.getElementById('activityTypeFilter').value;
+            const providerFilter = document.getElementById('providerFilter').value;
+            const seasonFilter = document.getElementById('seasonFilter').value;
+            const locationFilter = document.getElementById('locationFilter').value;
+
+            filteredActivities = allActivities.filter(activity => {
+                let matchesKid = kidsList.length === 0 || kidsList.some(kid => {
+                    const ageMatch = kid.age >= activity.ageMin && kid.age <= activity.ageMax;
+                    const interestMatch = !kid.interest || kid.interest === activity.type;
+                    return ageMatch && interestMatch;
+                });
+
+                const matchesActivityType = !activityTypeFilter || activity.activityType === activityTypeFilter;
+                const matchesProvider = !providerFilter || activity.category === providerFilter;
+                const matchesSeason = !seasonFilter || activity.season === seasonFilter || activity.season === "Year-Round";
+                const matchesLocation = !locationFilter || activity.location === locationFilter;
+
+                return matchesKid && matchesActivityType && matchesProvider && matchesSeason && matchesLocation;
+            });
+
+            displayResults();
+        }
+
+        function displayResults() {
+            const container = document.getElementById('resultsContainer');
+            const countElement = document.getElementById('resultsCount');
+            
+            countElement.textContent = `${filteredActivities.length} ${filteredActivities.length === 1 ? 'activity' : 'activities'} found`;
+
+            if (filteredActivities.length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        <h3>No activities found</h3>
+                        <p>Try adjusting your filters or check back later for new programs!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filteredActivities.map(activity => {
+                const deadline = activity.registrationDeadline ? new Date(activity.registrationDeadline) : null;
+                const today = new Date();
+                const daysUntilDeadline = deadline ? Math.ceil((deadline - today) / (1000 * 60 * 60 * 24)) : null;
+                const isUrgent = daysUntilDeadline !== null && daysUntilDeadline <= 14 && daysUntilDeadline >= 0;
+
+                // Find which kids match this activity
+                const matchingKids = kidsList.filter(kid => 
+                    kid.age >= activity.ageMin && kid.age <= activity.ageMax &&
+                    (!kid.interest || kid.interest === activity.type)
+                ).map(k => k.name);
+
+                return `
+                    <div class="activity-card">
+                        <div class="activity-header">
+                            <div>
+                                <div class="activity-title">${activity.name}</div>
+                                <div class="activity-organization">${activity.organization}</div>
+                                ${matchingKids.length > 0 ? `<div style="margin-top: 8px; color: #10b981; font-weight: 600;">✓ Perfect for: ${matchingKids.join(', ')}</div>` : ''}
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <span class="badge badge-season">${activity.season}</span>
+                            <span class="badge badge-type">${activity.activityType}</span>
+                            <span class="badge badge-age">Ages ${activity.ageMin}-${activity.ageMax}</span>
+                            ${activity.category ? `<span class="badge" style="background: #e0e7ff; color: #4338ca;">${activity.category}</span>` : ''}
+                            ${isUrgent ? `<span class="badge badge-urgent">⏰ Closes in ${daysUntilDeadline} days!</span>` : ''}
+                        </div>
+
+                        <div class="activity-details">
+                            <div class="detail-item">
+                                <span class="detail-label">📍 Location:</span>
+                                <span class="detail-value">${activity.location}</span>
+                            </div>
+                            ${activity.registrationDeadline ? `
+                                <div class="detail-item">
+                                    <span class="detail-label">📅 Deadline:</span>
+                                    <span class="detail-value">${new Date(activity.registrationDeadline).toLocaleDateString()}</span>
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        <p style="margin-top: 15px; color: #666;">${activity.description}</p>
+
+                        <a href="${activity.website}" target="_blank" class="activity-link">
+                            Visit Website & Register →
+                        </a>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ====== YEAR PLANNER ======
+        function generateYearPlan() {
+            if (!collectKidsInfo()) {
+                alert('Please enter at least one child\'s information in the "Find Activities" tab first!');
+                return;
+            }
+
+            const plannerResults = document.getElementById('plannerResults');
+            const calendarView = document.getElementById('calendarView');
+            
+            // Group activities by season
+            const activitiesBySeason = {
+                'Fall': [],
+                'Winter': [],
+                'Spring': [],
+                'Summer': [],
+                'Year-Round': []
+            };
+
+            allActivities.forEach(activity => {
+                kidsList.forEach(kid => {
+                    if (kid.age >= activity.ageMin && kid.age <= activity.ageMax) {
+                        if (!activitiesBySeason[activity.season].find(a => 
+                            a.name === activity.name && a.kidNames.includes(kid.name)
+                        )) {
+                            const existing = activitiesBySeason[activity.season].find(a => a.name === activity.name);
+                            if (existing) {
+                                existing.kidNames.push(kid.name);
+                            } else {
+                                activitiesBySeason[activity.season].push({
+                                    ...activity,
+                                    kidNames: [kid.name]
+                                });
+                            }
+                        }
+                    }
+                });
+            });
+
+            // Generate HTML
+            let html = '<h2 style="color: #667eea; margin-bottom: 30px;">Your Family\'s Activity Calendar</h2>';
+            
+            ['Fall', 'Winter', 'Spring', 'Summer', 'Year-Round'].forEach(seasonName => {
+                const activities = activitiesBySeason[seasonName];
+                if (activities.length === 0) return;
+
+                const season = seasons[seasonName];
+                html += `
+                    <div class="season-section">
+                        <div class="season-header">
+                            <span class="season-icon">${season.icon}</span>
+                            <div>
+                                <div class="season-title">${seasonName}</div>
+                                <div class="season-dates">${season.months}</div>
+                            </div>
+                        </div>
+                        <div class="season-activities">
+                `;
+
+                activities.forEach(activity => {
+                    html += `
+                        <div class="mini-activity-card">
+                            <div class="mini-activity-title">${activity.name}</div>
+                            <div class="mini-activity-org">${activity.organization} • ${activity.location}</div>
+                            <div>
+                                ${activity.kidNames.map(name => 
+                                    `<span class="mini-activity-kids">👤 ${name}</span>`
+                                ).join('')}
+                            </div>
+                            ${activity.registrationDeadline ? 
+                                `<div style="margin-top: 8px; font-size: 0.9em; color: #666;">
+                                    📅 Registration: ${new Date(activity.registrationDeadline).toLocaleDateString()}
+                                </div>` : ''}
+                        </div>
+                    `;
+                });
+
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+
+            calendarView.innerHTML = html;
+            plannerResults.style.display = 'block';
+            plannerResults.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function exportToCalendar() {
+            // Simple ICS calendar file generation
+            let icsContent = 'BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Central Oregon Youth Sports//EN\n';
+            
+            allActivities.forEach(activity => {
+                if (activity.registrationDeadline) {
+                    const date = new Date(activity.registrationDeadline);
+                    const dateStr = date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+                    
+                    icsContent += `BEGIN:VEVENT\n`;
+                    icsContent += `DTSTART:${dateStr}\n`;
+                    icsContent += `SUMMARY:${activity.name} Registration Deadline\n`;
+                    icsContent += `DESCRIPTION:${activity.description}\\nOrganization: ${activity.organization}\n`;
+                    icsContent += `LOCATION:${activity.location}\n`;
+                    icsContent += `END:VEVENT\n`;
+                }
+            });
+            
+            icsContent += 'END:VCALENDAR';
+            
+            const blob = new Blob([icsContent], { type: 'text/calendar' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'central-oregon-youth-sports.ics';
+            a.click();
+        }
+
+        // ====== LOAD DATA ======
+        window.onload = function() {
+            loadFromGoogleSheets();
+        };
+
+        async function loadFromGoogleSheets() {
+            if (SHEET_ID === 'YOUR-SHEET-ID-HERE') {
+                console.log('Using sample data. Add your Google Sheet ID to load real data.');
+                return;
+            }
+
+            try {
+                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
+                const response = await fetch(url);
+                const text = await response.text();
+                const json = JSON.parse(text.substr(47).slice(0, -2));
+                
+                allActivities = [];
+                
+                json.table.rows.forEach(row => {
+                    const cells = row.c;
+                    if (!cells[0] || !cells[1]) return;
+                    
+                    const activity = {
+                        name: cells[0]?.v || '',
+                        organization: cells[1]?.v || '',
+                        category: cells[2]?.v || 'Community Organization',
+                        season: cells[3]?.v || 'Year-Round',
+                        activityType: cells[4]?.v || 'Sports & Athletics',
+                        type: cells[5]?.v || 'Recreational',
+                        ageMin: parseInt(cells[6]?.v) || 3,
+                        ageMax: parseInt(cells[7]?.v) || 18,
+                        location: cells[8]?.v || 'Central Oregon',
+                        registrationDeadline: cells[9]?.v || '',
+                        website: cells[10]?.v || '',
+                        description: cells[11]?.v || ''
+                    };
+                    
+                    allActivities.push(activity);
+                });
+                
+                filteredActivities = [...allActivities];
+                console.log(`Loaded ${allActivities.length} activities from Google Sheets`);
+                
+            } catch (error) {
+                console.error('Error loading from Google Sheets:', error);
+                console.log('Using sample data instead');
+            }
+        }
+    </script>
+</body>
+</html>
